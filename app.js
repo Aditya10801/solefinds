@@ -60,21 +60,17 @@ app.get("/", function(req, res){
 
 
 app.get("/login", function(req, res){
-    if(req.isAuthenticated){
-        res.redirect("/home")
-    } else {
+    
         res.render("signin")
-    }
+    
 }
 
 )
 
 app.get("/register", function(req, res){
-    if(req.isAuthenticated){
-        res.redirect("/home")
-    } else {
+    
         res.render("register")
-    }
+    
     
 }
 
