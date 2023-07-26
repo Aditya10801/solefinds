@@ -38,10 +38,20 @@ const userSchema = new mongoose.Schema ({
 
 });
 
+const lockerSchema = new mongoose.Schema ({
+    lockername: String,
+    lockerlocation: String,
+    lockercode: Number,
+    lockerowner: String,
+
+});
+
+
 userSchema.plugin(passportLocalMongoose)
 userSchema.plugin(findOrCreate)
 
 const User = new mongoose.model("User", userSchema)
+const Locker = new mongoose.model("Locker", lockerSchema)
 
 passport.use(User.createStrategy());
 passport.serializeUser(function(user, done) {
@@ -77,11 +87,16 @@ app.get("/register", function(req, res){
 )
 
 app.get("/home", function(req, res){
-    if(req.isAuthenticated){
-        res.render("dashboard")
+    if(req.isAuthenticated() && req.user.username == "admin"){
+        res.render("vendor")
+    }
+    else if(req.isAuthenticated()){
+        res.render("dashboard", {user: req.user})
     } else {
         res.redirect("/login")
     }
+    
+    
     
 }
 
@@ -118,16 +133,14 @@ app.post("/login", function(req, res){
 })
 
 app.get("/logout", function(req, res){
-    if(req.isAuthenticated()){
+    
         
             req.logout(function(err){
                 console.log(err);
             });
             res.redirect("/")
         
-    }else{
-        res.redirect("/")
-    }
+    
     
 })
 
